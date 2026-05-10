@@ -1,9 +1,5 @@
-# Copyright (c) 2026, Bennett Wheel-Leg Project
-# All rights reserved.
-#
-# SPDX-License-Identifier: BSD-3-Clause
 
-"""URDF → 干净 USD 自动转换脚本
+"""URDF →  USD 自动转换脚本
 
 用法：
   ./isaaclab.sh -p A_GongJu/urdf_to_clean_usd.py
