@@ -10,8 +10,8 @@
 import argparse
 from isaaclab.app import AppLauncher
 
-# DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/ls/31/Bennett_test2/urdf/Bennett_test2.urdf"
-DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/gongsi/SIZU_Urdf_QianXiang1/urdf/SIZU_Urdf_QianXiang.urdf"
+DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/ls/31/Bennett_test2/urdf/Bennett_test2.urdf"
+# DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/gongsi/SIZU_Urdf_QianXiang1/urdf/SIZU_Urdf_QianXiang.urdf"
 
 
 # 碰撞体模式: 1=convexHull(URDF默认,简化) | 2=convexDecomposition(推荐,更贴合) | 3=none(原三角网格,动态体不支持)
@@ -35,8 +35,11 @@ args_cli = parser.parse_args()
 app_launcher = AppLauncher(args_cli)
 simulation_app = app_launcher.app
 
-import os, shutil
+import os, shutil, contextlib
 from pxr import Sdf, Usd, UsdGeom, UsdPhysics, PhysxSchema
+import carb
+import omni.kit.app
+import isaaclab.sim as sim_utils
 from isaaclab.sim.converters import UrdfConverter, UrdfConverterCfg
 from isaaclab.sim.utils import make_uninstanceable
 
@@ -254,12 +257,28 @@ def main():
     if args_cli.usd_only:
         if os.path.exists(args_cli.usd_only):
             clean_usd_file(args_cli.usd_only)
+            output_usd_path = args_cli.usd_only
     else:
         if not os.path.exists(urdf):
-            print(f"ERROR: {urdf} not found/n请修改 DEFAULT_URDF_PATH")
+            print(f"ERROR: {urdf} not found\n请修改 DEFAULT_URDF_PATH")
             return
         out = args_cli.output or os.path.splitext(urdf)[0] + ".usd"
         export_and_clean(urdf, out)
+        output_usd_path = out
+
+    # 转换完成后，如果有 GUI 则打开 USD 并保持 Isaac Sim 运行
+    carb_settings_iface = carb.settings.get_settings()
+    local_gui = carb_settings_iface.get("/app/window/enabled")
+    livestream_gui = carb_settings_iface.get("/app/livestream/enabled")
+
+    if local_gui or livestream_gui:
+        print(f"\n打开 USD 文件: {output_usd_path}")
+        sim_utils.open_stage(output_usd_path)
+        app = omni.kit.app.get_app_interface()
+        print("Isaac Sim 保持运行中，关闭窗口退出")
+        with contextlib.suppress(KeyboardInterrupt):
+            while app.is_running():
+                app.update()
 
 
 if __name__ == "__main__":
