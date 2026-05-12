@@ -14,8 +14,8 @@ DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/ls/31/Bennett_test2/urdf/Bennett_test2.u
 # DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/gongsi/SIZU_Urdf_QianXiang1/urdf/SIZU_Urdf_QianXiang.urdf"
 
 
-# 碰撞体模式: 1=convexHull(URDF默认,简化) | 2=convexDecomposition(推荐,更贴合) | 3=none(原三角网格,动态体不支持)
-COLLISION_MODE = 2
+# 碰撞体模式: 1=convexHull | 2=convexDecomposition(推荐) | 3=none | 4=meshSimplification
+COLLISION_MODE = 4
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--urdf", type=str, default=None)
@@ -78,7 +78,7 @@ def _apply_collision_api(prim):
         UsdPhysics.CollisionAPI.Apply(prim).CreateCollisionEnabledAttr(True)
         PhysxSchema.PhysxCollisionAPI.Apply(prim)
         mesh_api = UsdPhysics.MeshCollisionAPI.Apply(prim)
-        approx = {1: "convexHull", 2: "convexDecomposition", 3: "none"}.get(COLLISION_MODE, "convexHull")
+        approx = {1: "convexHull", 2: "convexDecomposition", 3: "none", 4: "meshSimplification"}.get(COLLISION_MODE, "convexHull")
         mesh_api.CreateApproximationAttr(approx)
     except Exception as e:
         print(f"    ✗ CollisionAPI error: {e}")

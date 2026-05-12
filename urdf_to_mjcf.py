@@ -5,7 +5,7 @@ import mujoco
 import os
 
 # URDF 路径（改成你自己的）
-urdf_path = r"source\isaaclab_tasks\isaaclab_tasks\manager_based\locomotion\velocity\config\AnLi\unitree_rl_gym-main\resources\robots\Bennett_test2\meshes\Bennett_test3.urdf"
+urdf_path = r"source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/AnLi/unitree_rl_gym-main/resources/robots/Bennett_test2/meshes/Bennett_test3.urdf"
 
 # 输出 MJCF 路径（同目录）
 mjcf_path = urdf_path.replace(".urdf", ".xml")
