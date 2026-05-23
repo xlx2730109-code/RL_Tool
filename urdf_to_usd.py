@@ -10,12 +10,12 @@
 import argparse
 from isaaclab.app import AppLauncher
 
-DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/ls/31/Bennett_test2/urdf/Bennett_test2.urdf"
+DEFAULT_URDF_PATH = "source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/bennett_test2/robot/Urdf_Bennett_test2/urdf/Urdf_Bennett_test2.urdf"
 # DEFAULT_URDF_PATH = "E:/HuanCun/Desktop/gongsi/SIZU_Urdf_QianXiang1/urdf/SIZU_Urdf_QianXiang.urdf"
 
 
 # 碰撞体模式: 1=convexHull | 2=convexDecomposition(推荐) | 3=none | 4=meshSimplification
-COLLISION_MODE = 4
+COLLISION_MODE = 1
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--urdf", type=str, default=None)
@@ -260,7 +260,7 @@ def main():
             output_usd_path = args_cli.usd_only
     else:
         if not os.path.exists(urdf):
-            print(f"ERROR: {urdf} not found\n请修改 DEFAULT_URDF_PATH")
+            print(f"ERROR: {urdf} not found/n请修改 DEFAULT_URDF_PATH")
             return
         out = args_cli.output or os.path.splitext(urdf)[0] + ".usd"
         export_and_clean(urdf, out)
@@ -272,7 +272,7 @@ def main():
     livestream_gui = carb_settings_iface.get("/app/livestream/enabled")
 
     if local_gui or livestream_gui:
-        print(f"\n打开 USD 文件: {output_usd_path}")
+        print(f"/n打开 USD 文件: {output_usd_path}")
         sim_utils.open_stage(output_usd_path)
         app = omni.kit.app.get_app_interface()
         print("Isaac Sim 保持运行中，关闭窗口退出")
